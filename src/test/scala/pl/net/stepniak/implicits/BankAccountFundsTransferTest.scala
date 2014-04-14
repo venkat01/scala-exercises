@@ -29,5 +29,17 @@ class BankAccountFundsTransferTest extends Specification with Mockito {
       bankAccountFundsTransfer.runTransaction(validTransactionAmount, firstBankAccount, secondBankAccount)(explicitLoggerMock)
       there was two(explicitLoggerMock).log(any[String])
     }
+
+    "debit the first bank account" in {
+      val from = mock[BankAccount]
+      bankAccountFundsTransfer.runTransaction(validTransactionAmount, from, secondBankAccount)(mock[Logger])
+      there was one(from).debit(validTransactionAmount)
+    }
+
+    "credit the second bank account" in {
+      val to = mock[BankAccount]
+      bankAccountFundsTransfer.runTransaction(validTransactionAmount, firstBankAccount, to)(mock[Logger])
+      there was one(to).credit(validTransactionAmount)
+    }
   }
 }
